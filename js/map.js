@@ -70,10 +70,10 @@ var customBuild = function(data) {
 	// circle.addTo(layer)
 	// Once layers are on the map, add a leaflet controller that shows/hides layers
 	var overlayMaps = {
-    		"Armed Suspects": armed
+    		"Armed Suspects": armed,
 		"Unarmed Suspects": unarmed
 	};
-	L.control.layers(null,armed unarmed).addTo(map);
+	L.control.layers(null,armed, unarmed).addTo(map);
 
 }
 
