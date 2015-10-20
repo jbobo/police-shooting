@@ -4,7 +4,7 @@ var map;
 var drawMap = function() {
 
   // Create map and set view
- 	 map = L.map('container').setView([39, 15028], 4);
+ 	 map = L.map('container').setView([39, -94], 4);
 	// [39, 15028], 4
 	// [latitude, longitude], zoom
 
@@ -76,7 +76,8 @@ var customBuild = function(data) {
 		"Unarmed Suspects": unarmed
 	};
 
-	L.control.layers(null,armed, unarmed).addTo(map);
-
+	L.control.layers(null,overlayMaps).addTo(map);
+	unarmed.addTo(map);
+	armed.addTo(map);
 }
 
