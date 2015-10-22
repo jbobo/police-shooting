@@ -54,16 +54,46 @@ var customBuild = function(data) {
 	//alert(data[0]["Victim's Age"])
 	var armed = new L.LayerGroup([])
 	var unarmed = new L.LayerGroup([])
+	
+	var armedMinorCount = 0
+	var unarmedMinorCount = 0
+	var armedAdultCount = 0
+	var unarmedAdultCount = 0
+	var armedUndefinedCount = 0
+	var unarmedUndefinedCount = 0
 
 	data.forEach(function(d) {
-		if(d["Victim's Age"] < 18) {
-			var color = 'blue'
-		}else{
-			var color = 'red'
+		var weapon = d["Armed or Unarmed?"]
+		var age = d["Victim's Age"]
+		if(age >= 18) {
+			var fillColor = "red"
+			var color = "transparent"
+			if (weapon == "Armed") {
+				armedAdultCount += 1
+			}else{
+				unarmedAdultCount += 1
+			}
+		}else if (age <= 17){
+			var fillColor = "blue"
+			var color = "transparent"
+			if (weapon == "Armed") {
+				armedMinorCount += 1
+			}else{
+				unarmedMinorCount += 1
+			}
+		} else {
+			var fillColor = "green"
+			var color = "transparent"
+			if (weapon == "Armed") {
+				armedUndefinedCount += 1
+			}else{
+				unarmedUndefinedCount += 1
+			}
 		}
-		var circle = new L.CircleMarker([d.lat, d.lng], {fillColor:color, radius:10,})
-		circle.bindPopup('<strong>City: </strong>' + d.City + '<br><strong>State: </strong>'+d.State+'<br><strong>Name: </strong>' + d["Victim Name"] + '<br><strong>Age: </strong>' + d["Victim's Age"] + '<br><strong>Gender: </strong>' + d["Victim's Gender"] + '<br><strong>Weapon Used: </strong>' + d["Weapon"] + '<br><strong>Date of Altercation: </strong>' + d["Timestamp"] + '<br><strong>Summary of Altercation: </strong>' + d["Summary"] + '<br><strong>Result of Altercation: </strong>' + d["Hit or Killed?"] + '<br><strong></strong>' + d["Victim's Age"])
-		if(d["Weapon"] = "Unarmed") {
+		
+		var circle = new L.CircleMarker([d.lat, d.lng], {fillColor: fillColor, color: color, radius:12})
+		circle.bindPopup('<strong>City: </strong>' + d.City + '<br><strong>State: </strong>'+d.State+'<br><strong>Name: </strong>' + d["Victim Name"] + '<br><strong>Age: </strong>' + d["Victim's Age"] + '<br><strong>Gender: </strong>' + d["Victim's Gender"] + '<br><strong>Weapon Used: </strong>' + d["Weapon"] + '<br><strong>Date of Altercation: </strong>' + d["Timestamp"] + '<br><strong>Summary of Altercation: </strong>' + d["Summary"] + '<br><strong>Result of Altercation: </strong>' + d["Hit or Killed?"])
+		if(d["Weapon"] == "Unarmed") {
 			circle.addTo(unarmed)	
 		}else{
 			circle.addTo(armed)
@@ -75,9 +105,10 @@ var customBuild = function(data) {
     		"Armed Suspects": armed,
 		"Unarmed Suspects": unarmed
 	};
-
-	L.control.layers(null,overlayMaps).addTo(map);
 	unarmed.addTo(map);
 	armed.addTo(map);
+	L.control.layers(null,overlayMaps).addTo(map);
+
+	$('.title').append( '<table class = "table-striped table-hover">' + '<tr>' + '<td>  </td>' + '<th class = "c"> Undefined </th>' + '<th class = "c"> Minors </th>'+ '<th> Adults </th>' + '</tr>' + '<tr>' + '<th class = "l"> Armed </th>' + '<td class = "c"> ' + armedUndefinedCount + ' </td>' + '<td class = "c">' + armedMinorCount + '</td>' + '<td>' + armedAdultCount + '</td>' + '</tr>' + '<tr>' + '<th class = "l"> Unarmed </th>' + '<td class = "c">' + unarmedUndefinedCount + '</td>' + '<td class = "c">' + unarmedMinorCount + '</td>' + '<td>' + unarmedAdultCount + '</td>' + '</tr>' + '</table>' );
 }
 
